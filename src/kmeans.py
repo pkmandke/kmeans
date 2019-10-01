@@ -34,12 +34,16 @@ from nltk.stem.porter import PorterStemmer
 from sklearn.cluster import KMeans
 import joblib
 
+doc_cnt = 0
 
 def p_tokenize(text):
     '''Simple Porter stemmer. Code credits: https://www.bogotobogo.com/python/NLTK/tf_idf_with_scikit-learn_NLTK.php'''
     
-    tokens = nltk.word_tokenize(text.lower().translate(None, string.punctuation))
+    global doc_cnt
+    doc_cnt += 1
+    tokens = nltk.word_tokenize(text.lower().translate(str.maketrans('', '', string.punctuation)))
     stems = []
+    print("Tokenizing Document #{}".format(doc_cnt), end='\r')
     for item in tokens:
         stems.append(PorterStemmer().stem(item))
     return stems
@@ -57,14 +61,20 @@ class TFIDF:
         self.decode_error=decode_error
         self.strip_accents = strip_accents
         self.analyzer = analyzer
-        self.stop_words = stop_words
+        self.tokenizer = tokenizer
+
+        nltk.download('stopwords', quiet=True, raise_on_error=True)
+        stop_words = nltk.corpus.stopwords.words(stop_words)
+        self.stop_words = self.tokenizer(' '.join(stop_words))
+        print("Stop words: \n {}".format(self.stop_words))
         self.min_df = min_df
         self.max_df = max_df
         self.dtype = dtype
         
         self.doc_iter = Doc_iter(self.doc_list)
-        self.tokenizer = tokenizer
-        self.vectorizer = TfidfVectorizer()
+        self.vectorizer = TfidfVectorizer(input=self.input, decode_error=self.decode_error, strip_accents=self.strip_accents, \
+                                         tokenizer=self.tokenizer, analyzer=self.analyzer, stop_words=self.stop_words, \
+                                         min_df=self.min_df, max_df=self.max_df, dtype=self.dtype)
         
     def fit_transform(self):
         
