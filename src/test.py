@@ -1,4 +1,4 @@
-# For testing Kmeans 
+# For testing Kmeans
 
 '''
 
@@ -19,14 +19,14 @@ from kmeans import *
 import argparse
 
 if __name__ == '__main__':
-    
+
     parser = argparse.ArgumentParser()
-    
+
     parser.add_argument('--new_tf', type=bool, default=True)
     parser.add_argument('--n_idf', type=str, default='1')
     parser.add_argument('--n_clus', default=10, type=int)
     parser.add_argument('--n_km', default='1', type=str)
-    
+
     args = parser.parse_args()
     if args.new_tf:
         print("Computing TFIDF vectors:")
@@ -34,10 +34,13 @@ if __name__ == '__main__':
         tfidf = TFIDF()
         tfidf.fit_transform()
         print("Done in {}s.".format(timedelta(seconds=time.monotonic() - t1)))
-        tfidf.save(SAVE_PATH + 'TFIDF_' + args.n_idf + '.sav')
+        joblib.dump(tfidf, SAVE_PATH + 'TFIDF_' + args.n_idf + '.sav')
+        #tfidf.save(SAVE_PATH + 'TFIDF_' + args.n_idf + '.sav')
     else:
         tfidf = joblib.load(SAVE_PATH + 'TFIDF_' + args.n_idf + '.sav')
-    
+
+    sys.exit(0)
+
     km = Kmeans(n_clusters=args.n_clus, doc_list=tfidf.doc_list.copy())
     data = tfidf.tfidf_matrix.copy()
     del tfidf
@@ -45,4 +48,4 @@ if __name__ == '__main__':
     t1 = time.monotonic()
     km.fit(data)
     print("Done in {}s".format(timedelta(seconds=time.monotonic() - t1)))
-    km.save(SAVE_PATH + 'Kmeans_' + args.n_idf.sav + '_' + args.n_km + '.sav')
+    joblib.dump(km, SAVE_PATH + 'kmeans_' + args.n_idf.sav + '_' + args.n_km + '.sav')

@@ -16,8 +16,8 @@ Date created: 09/28/2019
 
 # PATHS: TO BE SET Properly
 
-DATA_PATH = '/mnt/ceph/shared/tobacco/text_files_depositions/'
-SAVE_PATH = '/mnt/ceph/tml/clustering/kmeans/obj/' 
+DATA_PATH = '/media/pkmandke/DATA/ECE/courses/info_ret/data/tobacco/docs/'
+SAVE_PATH = '/media/pkmandke/DATA/ECE/courses/info_ret/obj/'
 
 # Imports
 
@@ -38,7 +38,7 @@ doc_cnt = 0
 
 def p_tokenize(text):
     '''Simple Porter stemmer. Code credits: https://www.bogotobogo.com/python/NLTK/tf_idf_with_scikit-learn_NLTK.php'''
-    
+
     global doc_cnt
     doc_cnt += 1
     tokens = nltk.word_tokenize(text.lower().translate(str.maketrans('', '', string.punctuation)))
@@ -50,11 +50,11 @@ def p_tokenize(text):
 
 
 class TFIDF:
-    
+
     def __init__(self, data_path=DATA_PATH, tokenizer=p_tokenize, i_input='filename', \
                  decode_error='ignore', strip_accents='ascii', analyzer='word', stop_words='english', \
                 min_df=0.0, max_df=0.7, dtype=np.float64):
-        
+
         self.data_path = data_path
         self.doc_list = [self.data_path + _ for _ in os.listdir(self.data_path)]
         self.input = i_input
@@ -70,67 +70,67 @@ class TFIDF:
         self.min_df = min_df
         self.max_df = max_df
         self.dtype = dtype
-        
+
         self.doc_iter = Doc_iter(self.doc_list)
         self.vectorizer = TfidfVectorizer(input=self.input, decode_error=self.decode_error, strip_accents=self.strip_accents, \
                                          tokenizer=self.tokenizer, analyzer=self.analyzer, stop_words=self.stop_words, \
                                          min_df=self.min_df, max_df=self.max_df, dtype=self.dtype)
-        
+
     def fit_transform(self):
-        
+
         self.tfidf_matrix = self.vectorizer.fit_transform(self.doc_iter)
-        
+
     def save(self, filename):
         joblib.dump(self, filename)
-        
-    
+
+
 class Kmeans:
-    
-    def __init__(self, doc_list, n_clusters=10, init='k-means++', n_init=10, n_jobs=5, random_state=42, verbose=1, algorithm='full'):
-        
+
+    def __init__(self, doc_list, n_clusters=10, init='k-means++', n_init=5, n_jobs=5, random_state=42, verbose=1, algorithm='full'):
+
         self.doc_list = doc_list
         self.n_clusters = n_clusters
         self.rand_state = random_state
         self.init = init
         self.n_init = n_init
         self.algorithm = algorithm
-        
+
         self.km = KMeans(n_clusters=self.n_clusters, init=self.init, n_init=self.n_init, \
                          verbose=verbose, random_state=self.rand_state, algorithm=self.algorithm)
-        
+
     def fit(self, data):
-        
+
         self.km.fit(data);
-        
+
     def save(self, filename):
         joblib.dump(self, filename)
-        
-      
+
+
 class Doc_iter:
     '''Document iterator'''
     def __init__(self, doc_list):
-        
+
         self.doc_list = doc_list
         self.ptr = 0
         self.len_doc_list = len(self.doc_list)
-        
+
     def __iter__(self):
         return self
-    
+
     def __next__(self):
-        
+
         if self.ptr >= self.len_doc_list:
             raise StopIteration
-            
+
         rvalue = self.doc_list[self.ptr]
         self.ptr += 1
-        
+
         return rvalue
-   
+
 
 
 if __name__ == '__main__':
-    
+
     '''print("Computing TFIDF vectors:")
     t1 = time.monotonic()
     tfidf = TFIDF()
@@ -138,7 +138,7 @@ if __name__ == '__main__':
     print("Done in {}s.".format(timedelta(seconds=time.monotonic() - t1)))
     tfidf.save(SAVE_PATH + 'TFIDF_1.sav')
    '''
-    
+
     tfidf = joblib.load(SAVE_PATH + 'TFIDF_1.sav')
     km = Kmeans(doc_list=tfidf.doc_list.copy())
     data = tfidf.tfidf_matrix
