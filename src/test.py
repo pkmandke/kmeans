@@ -2,7 +2,7 @@
 
 '''
 
-Title: K-Means clustering of documents
+Title: Testing Kmeans algorithm.
 
 CS5604@VT
 
@@ -13,6 +13,7 @@ Author: Prathamesh Mandke
 Date created: 09/28/2019
 
 '''
+
 # conda activate preproc
 
 from kmeans import *
@@ -22,7 +23,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--new_tf', type=bool, default=True)
+    parser.add_argument('--new_tf', type=bool, default=False)
     parser.add_argument('--n_idf', type=str, default='1')
     parser.add_argument('--n_clus', default=10, type=int)
     parser.add_argument('--n_km', default='1', type=str)
@@ -39,8 +40,6 @@ if __name__ == '__main__':
     else:
         tfidf = joblib.load(SAVE_PATH + 'TFIDF_' + args.n_idf + '.sav')
 
-    sys.exit(0)
-
     km = Kmeans(n_clusters=args.n_clus, doc_list=tfidf.doc_list.copy())
     data = tfidf.tfidf_matrix.copy()
     del tfidf
@@ -48,4 +47,4 @@ if __name__ == '__main__':
     t1 = time.monotonic()
     km.fit(data)
     print("Done in {}s".format(timedelta(seconds=time.monotonic() - t1)))
-    joblib.dump(km, SAVE_PATH + 'kmeans_' + args.n_idf.sav + '_' + args.n_km + '.sav')
+    joblib.dump(km, SAVE_PATH + 'kmeans_' + args.n_idf + '_' + args.n_km + '.sav')

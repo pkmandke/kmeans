@@ -17,7 +17,7 @@ Date created: 09/28/2019
 # PATHS: TO BE SET Properly
 
 DATA_PATH = '/media/pkmandke/DATA/ECE/courses/info_ret/data/tobacco/docs/'
-SAVE_PATH = '/media/pkmandke/DATA/ECE/courses/info_ret/obj/'
+SAVE_PATH = '/media/pkmandke/DATA/ECE/courses/info_ret/code/kmeans/obj/'
 
 # Imports
 
@@ -38,12 +38,11 @@ doc_cnt = 0
 
 def p_tokenize(text):
     '''Simple Porter stemmer. Code credits: https://www.bogotobogo.com/python/NLTK/tf_idf_with_scikit-learn_NLTK.php'''
-
-    global doc_cnt
-    doc_cnt += 1
+    #global doc_cnt
+    #doc_cnt += 1
     tokens = nltk.word_tokenize(text.lower().translate(str.maketrans('', '', string.punctuation)))
     stems = []
-    print("Tokenizing Document #{}".format(doc_cnt), end='\r')
+    #print("Tokenizing Document #{}".format(doc_cnt), end='\r')
     for item in tokens:
         stems.append(PorterStemmer().stem(item))
     return stems
@@ -99,6 +98,8 @@ class Kmeans:
                          verbose=verbose, random_state=self.rand_state, algorithm=self.algorithm)
 
     def fit(self, data):
+        '''Fit the kmeans object. Clusters and assignments are stored in \
+        attributes of self.km'''
 
         self.km.fit(data);
 
