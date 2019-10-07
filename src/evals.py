@@ -11,12 +11,13 @@ Date created: 10/03/2019
 
 '''
 
-BS_PATH = '/media/pkmandke/DATA/ECE/courses/info_ret/code/kmeans/obj/'
-DATA_PATH = '/media/pkmandke/DATA/ECE/courses/info_ret/data/tobacco/docs/'
+BS_PATH = '/mnt/ceph/tml/clustering/kmeans/obj/'
+DATA_PATH = '/mnt/ceph/shared/tobacco/text_files_depositions_clean/'
 
 import joblib
 from kmeans import *
 import numpy as np
+import nltk
 import os
 
 class SavLoader:
@@ -55,10 +56,11 @@ class SavLoader:
 
 class SavTokenize:
 
-    def __init__(self, path, savPath):
+    def __init__(self, path=None, savPath=None):
         self.path = path
         self.doc_tokens = dict()
         self.savPath = savPath
+        nltk.download('punkt')
 
     def tokenize(self):
         for _ in os.listdir(self.path):
@@ -77,8 +79,14 @@ def main():
         com_terms = sav.eval_cluster(n_clus=_)
     print("Eval done")
     #print(com_terms)
-
-
+def main_():
+    sav = SavTokenize(path=DATA_PATH, savPath=BS_PATH + 'tokens_2.sav')
+    
+    sav.tokenize()
+    
+    sav.save()
+    
+main_()
 
 if __name__ == '__main__':
 #    sav = SavTokenize(DATA_PATH, BS_PATH + 'tokens_1.sav')

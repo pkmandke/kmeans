@@ -14,7 +14,9 @@ Date created: 09/28/2019
 
 '''
 
-# conda activate preproc
+# conda activate preproc - deprecated
+
+# conda activate kmeans
 
 from kmeans import *
 import argparse
@@ -23,8 +25,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--new_tf', type=bool, default=False)
-    parser.add_argument('--n_idf', type=str, default='1')
+    parser.add_argument('--new_tf', type=bool, default=True)
+    parser.add_argument('--n_idf', type=str, default='2')
     parser.add_argument('--n_clus', default=10, type=int)
     parser.add_argument('--n_km', default='1', type=str)
 

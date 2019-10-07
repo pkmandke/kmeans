@@ -12,17 +12,18 @@ Date created: 09/28/2019
 
 '''
 
-# conda activate preproc
+# conda activate preproc - deprecated
+
+# conda activate kmeans
 
 # PATHS: TO BE SET Properly
 
-DATA_PATH = '/media/pkmandke/DATA/ECE/courses/info_ret/data/tobacco/docs/'
-SAVE_PATH = '/media/pkmandke/DATA/ECE/courses/info_ret/code/kmeans/obj/'
+DATA_PATH = '/mnt/ceph/shared/tobacco/text_files_depositions_clean/'
+SAVE_PATH = '/mnt/ceph/tml/clustering/kmeans/obj/'
 
 # Imports
 
 import numpy as np
-
 import nltk
 import string
 import os
@@ -45,6 +46,7 @@ def p_tokenize(text):
     #print("Tokenizing Document #{}".format(doc_cnt), end='\r')
     for item in tokens:
         stems.append(PorterStemmer().stem(item))
+    
     return stems
 
 
@@ -61,7 +63,7 @@ class TFIDF:
         self.strip_accents = strip_accents
         self.analyzer = analyzer
         self.tokenizer = tokenizer
-
+        
         nltk.download('stopwords', quiet=True, raise_on_error=True)
         stop_words = nltk.corpus.stopwords.words(stop_words)
         self.stop_words = self.tokenizer(' '.join(stop_words))
@@ -69,7 +71,7 @@ class TFIDF:
         self.min_df = min_df
         self.max_df = max_df
         self.dtype = dtype
-
+        
         self.doc_iter = Doc_iter(self.doc_list)
         self.vectorizer = TfidfVectorizer(input=self.input, decode_error=self.decode_error, strip_accents=self.strip_accents, \
                                          tokenizer=self.tokenizer, analyzer=self.analyzer, stop_words=self.stop_words, \
