@@ -21,14 +21,15 @@ Date created: 09/28/2019
 from kmeans import *
 import argparse
 
-if __name__ == '__main__':
 
+def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--new_tf', type=bool, default=True)
     parser.add_argument('--n_idf', type=str, default='2')
     parser.add_argument('--n_clus', default=10, type=int)
     parser.add_argument('--n_km', default='1', type=str)
+    
 
     args = parser.parse_args()
     if args.new_tf:
@@ -50,3 +51,7 @@ if __name__ == '__main__':
     km.fit(data)
     print("Done in {}s".format(timedelta(seconds=time.monotonic() - t1)))
     joblib.dump(km, SAVE_PATH + 'kmeans_' + args.n_idf + '_' + args.n_km + '.sav')
+
+if __name__ == '__main__':
+    main()
+    

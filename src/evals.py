@@ -86,7 +86,6 @@ def main_():
     
     sav.save()
     
-main_()
 
 if __name__ == '__main__':
 #    sav = SavTokenize(DATA_PATH, BS_PATH + 'tokens_1.sav')
