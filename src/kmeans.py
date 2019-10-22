@@ -19,7 +19,8 @@ Date created: 09/28/2019
 # PATHS: TO BE SET Properly
 
 DATA_PATH = '/mnt/ceph/shared/tobacco/text_files_depositions_clean/'
-SAVE_PATH = '/mnt/ceph/tml/clustering/kmeans/obj/'
+SAVE_PATH = '/mnt/ceph/tml/clustering/kmeans/obj/tobacco/chi_1/'
+
 
 # Imports
 
@@ -30,6 +31,7 @@ import os
 import time
 from datetime import timedelta
 
+from sklearn.metrics import calinski_harabasz_score as cb_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from nltk.stem.porter import PorterStemmer
 from sklearn.cluster import KMeans
@@ -87,7 +89,7 @@ class TFIDF:
 
 class Kmeans:
 
-    def __init__(self, doc_list, n_clusters=10, init='k-means++', n_init=5, n_jobs=5, random_state=42, verbose=1, algorithm='full'):
+    def __init__(self, doc_list, n_clusters=10, init='k-means++', n_init=3, n_jobs=5, random_state=42, verbose=1, algorithm='full'):
 
         self.doc_list = doc_list
         self.n_clusters = n_clusters
@@ -104,6 +106,10 @@ class Kmeans:
         attributes of self.km'''
 
         self.km.fit(data);
+        
+    def compute_chi_index(self, data):
+        print("Computing CH score")
+        return cb_score(data.todense(), self.km.labels_)
 
     def save(self, filename):
         joblib.dump(self, filename)
