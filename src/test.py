@@ -12,6 +12,8 @@ Author: Prathamesh Mandke
 
 Date created: 09/28/2019
 
+Date modified: 10/22/2019
+
 '''
 
 # conda activate preproc - deprecated
@@ -36,7 +38,7 @@ def main():
 
 
 
-    
+
     fout = open("./output.out", 'w')
     args = parser.parse_args()
     fout.write("Start \n")
@@ -88,7 +90,7 @@ def main():
 
 
 
-    
+
 
     fout.write("Done. Total time taken {}s \n".format(timedelta(seconds=time.monotonic() - t_st)))
 
